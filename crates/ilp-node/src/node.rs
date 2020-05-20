@@ -99,7 +99,7 @@ fn deserialize_optional_address<'de, D>(deserializer: D) -> Result<Option<Addres
 where
     D: Deserializer<'de>,
 {
-    if let Ok(address) = Bytes::deserialize(deserializer) {
+    if let Ok(address) = bytes05::Bytes::deserialize(deserializer) {
         Address::try_from(address)
             .map(Some)
             .map_err(|err| DeserializeError::custom(format!("Invalid address: {:?}", err)))
