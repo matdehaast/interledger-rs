@@ -10,7 +10,7 @@ use std::fmt;
 use std::str;
 
 use crate::errors::ParseError;
-use bytes05::{BufMut, Bytes, BytesMut};
+use bytes::{BufMut, Bytes, BytesMut};
 use std::convert::TryFrom;
 use std::str::FromStr;
 

@@ -165,7 +165,6 @@ dependencies = [
  "byteorder",
  "either",
  "iovec",
- "serde",
 ]
 
 [[package]]
@@ -1138,7 +1137,6 @@ name = "interledger-packet"
 version = "1.0.0"
 dependencies = [
  "byteorder",
- "bytes 0.4.12",
  "bytes 0.5.4",
  "chrono",
  "criterion",
