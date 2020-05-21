@@ -1,6 +1,6 @@
 use super::{packet::*, BtpAccount};
 use async_trait::async_trait;
-use bytes::BytesMut;
+use bytes::{BytesMut, BufMut, Buf};
 use futures::{
     channel::{
         mpsc::{unbounded, UnboundedReceiver, UnboundedSender},
@@ -476,7 +476,7 @@ fn parse_ilp_packet(message: Message) -> Result<(u32, Packet), ()> {
                 return Err(());
             }
         };
-        if let Ok(packet) = Packet::try_from(BytesMut::from(ilp_data)) {
+        if let Ok(packet) = Packet::try_from(BytesMut::from(&ilp_data[..])) {
             Ok((request_id, packet))
         } else {
             Err(())
