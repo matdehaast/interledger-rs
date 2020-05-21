@@ -26,7 +26,7 @@ cfg_if! {
 #[cfg(any(feature = "monitoring", feature = "google-pubsub"))]
 use interledger::service::OutgoingService;
 
-use bytes::Bytes;
+use bytes05::Bytes;
 use futures::TryFutureExt;
 use hex::FromHex;
 use interledger::{
@@ -305,7 +305,7 @@ impl InterledgerNode {
             ilp_address
         );
 
-        let secret_seed = Bytes::from(&self.secret_seed[..]);
+        let secret_seed = Bytes::from((&self.secret_seed[..]).to_owned());
         let http_bind_address = self.http_bind_address;
         let settlement_api_bind_address = self.settlement_api_bind_address;
         let ilp_address_clone = ilp_address.clone();
