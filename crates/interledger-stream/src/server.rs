@@ -1,7 +1,7 @@
 use super::crypto::*;
 use super::packet::*;
 use async_trait::async_trait;
-use bytes::{Bytes, BytesMut};
+use bytes::{Bytes, BytesMut, Buf};
 use chrono::{DateTime, Utc};
 use futures::channel::mpsc::UnboundedSender;
 use interledger_packet::{
@@ -37,10 +37,9 @@ pub struct ConnectionGenerator {
 impl ConnectionGenerator {
     pub fn new(server_secret: Bytes) -> Self {
         assert_eq!(server_secret.len(), 32, "Server secret must be 32 bytes");
+        let hmac = &hmac_sha256(&server_secret[..], STREAM_SERVER_SECRET_GENERATOR)[..];
         ConnectionGenerator {
-            secret_generator: Bytes::from(
-                &hmac_sha256(&server_secret[..], STREAM_SERVER_SECRET_GENERATOR)[..],
-            ),
+            secret_generator: Bytes::from(hmac.to_owned())
         }
     }
 
@@ -332,7 +331,8 @@ mod connection_generator {
     fn generates_valid_ilp_address() {
         let server_secret = [9; 32];
         let receiver_address = Address::from_str("example.receiver").unwrap();
-        let connection_generator = ConnectionGenerator::new(Bytes::from(&server_secret[..]));
+        let secret = &server_secret[..];
+        let connection_generator = ConnectionGenerator::new(Bytes::from(secret.to_owned()));
         let (destination_account, shared_secret) =
             connection_generator.generate_address_and_secret(&receiver_address);
 
